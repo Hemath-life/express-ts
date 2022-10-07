@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "lib": [
+      "es6"
+    ],
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
+// target: Allows us to specify the target JavaScript version that the compiler will output
+// module: Allows us to use a module manager in the compiled JavaScript code. CommonJS is supported and is a standard in Node.js
+// strict: An option that enables strict type-checking options
+// esModuleInterop: Allows us to compile ES6 modules to CommonJS modules
+// skipLibCheck: If set to true, skips type-checking of default library declaration files
+// forceConsistentCasingInFileNames: When set to true, enables case sensitive file naming
