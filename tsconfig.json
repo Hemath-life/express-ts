@@ -1,19 +1,16 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "lib": [
-      "es6"
-    ],
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "lib": ["es6"],
+        "typeRoots": ["@types"]
+    },
+    "exclude": ["node_modules"]
 }
 // target: Allows us to specify the target JavaScript version that the compiler will output
 // module: Allows us to use a module manager in the compiled JavaScript code. CommonJS is supported and is a standard in Node.js

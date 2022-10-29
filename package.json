@@ -6,7 +6,9 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/app.js",
-    "dev": "NODE_ENV=dev concurrently \"npx tsc --watch\" \"nodemon -q dist/bin/www.js\""
+    "dev": "NODE_ENV=dev concurrently \"npx tsc --watch\" \"nodemon -q dist/bin/www\"",
+    "w": "NODE_ENV=dev concurrently \"npx tsc --watch\" "
+
   },
   "keywords": [],
   "author": "",
