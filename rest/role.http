@@ -1,0 +1,9 @@
+POST  http://localhost:5000/api/v1/role/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "admin@gmadil.com",
+  "description": "123456"
+}
+
+###
