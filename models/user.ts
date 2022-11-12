@@ -1,22 +1,16 @@
-import mongoose, { Schema, Model, Document } from 'mongoose';
+import { Schema, model, connect, Types } from 'mongoose';
 
-type UserDocument = Document & {
+// 1. Create an interface representing a document in MongoDB.
+interface IUser {
     fullName: string;
     email: string;
     password: string;
-    enabled: string;
-    role: string;
-};
+    enabled: boolean;
+    role: Types.ObjectId;
+}
 
-type UserInput = {
-    fullName: UserDocument['fullName'];
-    email: UserDocument['email'];
-    password: UserDocument['password'];
-    enabled: UserDocument['enabled'];
-    role: UserDocument['role'];
-};
-
-const usersSchema = new Schema(
+// 2. Create a Schema corresponding to the document interface.
+const usersSchema = new Schema<IUser>(
     {
         fullName: {
             type: Schema.Types.String,
@@ -48,6 +42,6 @@ const usersSchema = new Schema(
     },
 );
 
-const User: Model<UserDocument> = mongoose.model<UserDocument>('User', usersSchema);
-
-export { User, UserInput, UserDocument };
+// 3. Create a Model.
+export default model<IUser>('User', usersSchema);
+export { IUser };

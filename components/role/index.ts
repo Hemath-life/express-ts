@@ -6,8 +6,7 @@ const createRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { description, name } = req.body;
 
-        console.log(req.body,'===========>>>>>>>>');
-        
+    
         if (!name || !description) return res.serverError(422, 'The fields name and description are required');
 
         const role: RoleInput = {
@@ -39,7 +38,8 @@ const getAllRoles = async (req: Request, res: Response) => {
 
 const updateRole = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { description, name } = req.body;
+    // Partial any one value should be present
+    const body: Partial<RoleInput> = req.body;
 
     const role = await Role.findOne({ _id: id });
 
@@ -47,13 +47,13 @@ const updateRole = async (req: Request, res: Response) => {
         return res.status(404).json({ message: `Role with id "${id}" not found.` });
     }
 
-    if (!name || !description) {
-        return res.status(422).json({ message: 'The fields name and description are required' });
+    if (Object.keys(body).length == 0) {
+        return res.status(422).json({ message: 'The fields name or description required' });
     }
 
-    await Role.updateOne({ _id: id }, { name, description });
+    await Role.updateOne({ _id: id }, body);
 
-    const roleUpdated = await Role.findById(id, { name, description });
+    const roleUpdated = await Role.findById(id, body);
 
     return res.status(200).json({ data: roleUpdated });
 };

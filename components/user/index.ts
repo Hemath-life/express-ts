@@ -1,11 +1,12 @@
-import { Request, Response } from 'express';
-import crypto from 'crypto';
+import User, { IUser } from '../../models/user';
 
-import { User, UserInput } from '../../models/user';
+import { Request, Response } from 'express';
+import { HydratedDocument } from 'mongoose';
+
+import crypto from 'crypto';
 
 const hashPassword = (password: string) => {
     const salt = crypto.randomBytes(16).toString('hex');
-
     // Hashing salt and password with 100 iterations, 64 length and sha512 digest
     return crypto.pbkdf2Sync(password, salt, 100, 64, `sha512`).toString(`hex`);
 };
@@ -17,15 +18,9 @@ const createUser = async (req: Request, res: Response) => {
         return res.status(422).json({ message: 'The fields email, fullName, password and role are required' });
     }
 
-    const userInput: UserInput = {
-        fullName,
-        email,
-        password: hashPassword(password),
-        enabled,
-        role,
-    };
+    const userInput = { fullName, email, password: hashPassword(password), enabled, role };
 
-    const userCreated = await User.create(userInput);
+    const userCreated: HydratedDocument<IUser> = await User.create(userInput);
 
     return res.status(201).json({ data: userCreated });
 };
