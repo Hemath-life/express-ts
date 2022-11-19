@@ -59,7 +59,7 @@ const colors = {
 var exLog = console.log;
 const d: string = new Date().toLocaleTimeString();
 console.log = function () {
-    var timestamp = `${colors.reverse}[${d}]${colors.reset}  `;
+    const timestamp = `${colors.dim}[${d}]${colors.reset}  `;
     Array.prototype.unshift.call(arguments, timestamp);
     exLog.apply(this, [...arguments]);
 };
