@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { Role, RoleInput } from '../../models/role';
 import ErrorHandler from '../../utils/handlers';
 
-const createRole = async (req: Request, res: Response, next: NextFunction) => {
+const createRole = async (req: Request, res: Response) => {
     try {
         const { description, name } = req.body;
 

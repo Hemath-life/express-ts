@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/types/express/index.d.ts
 
 import { Language, User } from '../custom';
@@ -13,9 +14,9 @@ declare global {
         }
         export interface Response {
             success(data: any): Response;
-            serverError(code: number, data: Object): Response;
-            displayError(code: number, data: Object): Response;
-            unauthorized(data: Object): Response;
+            serverError(code: number, data: any): Response;
+            displayError(code: number, data: any): Response;
+            unauthorized(data: any): Response;
         }
     }
 }

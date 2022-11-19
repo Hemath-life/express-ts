@@ -4,10 +4,11 @@
  * @param err Error caught by Express.js
  */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ErrorHandler(err: any): any {
-    let error = err;
+    const error = err;
 
-    let message: undefined | String;
+    let message: undefined | string;
 
     if (error instanceof Error && typeof error === 'object') {
         try {
@@ -18,7 +19,7 @@ function ErrorHandler(err: any): any {
         // we are not using the next function to prevent from triggering
         // the default error-handler.
     } else if (typeof error === 'string' || error instanceof String) {
-        message = error;
+        message = error as string;
     }
 
     return message;

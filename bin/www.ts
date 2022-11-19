@@ -1,10 +1,25 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-import app from '../app';
+import server from '../server';
+import rootSocket from '../socket/index';
+import connectDB from '../config/database';
+import { Server } from 'socket.io';
+const io = new Server(server);
 
-const http = require('http');
-const server = http.createServer(app);
+connectDB()
+    .then((a) => {
+        const { name, host, port } = a.connections[0];
+        console.log('[Database]: mongodb connected');
+        console.log('[Database Name]:', name);
+        console.log('[Host]:', host);
+        console.log('[Port]:', port);
 
-server.listen(process.env.PORT, () => {
-    console.log(`[App] running in ${process.env.NODE_ENV} mode on port: ${process.env.PORT}`);
-});
+        rootSocket(io);
+        server.listen(process.env.PORT, () => {
+            console.log(`[App]: running in ${process.env.NODE_ENV} mode on port: ${process.env.PORT}`);
+        });
+    })
+    .catch((e) => {
+        console.log('[Server Failed]:', e);
+        process.exit(1);
+    });

@@ -1,18 +1,18 @@
 import { connect } from 'mongoose';
-import ErrorHandler from '../utils/handlers';
-const { DB_URL } = process.env;
+import { createClient } from 'redis';
+const { DB_URL, REDIS_PORT, REDIS_PASSWORD, REDIS_HOST } = process.env;
 
-const connectDB = async () => {
-    try {
-        const mongoURI: string = DB_URL!;
-        if (DB_URL?.length == 0) throw new Error('mongo url not loaded pls check ');
-        else await connect(mongoURI);
-        console.log('MongoDB Connected...');
-    } catch (err) {
-        console.log(ErrorHandler(err));
-        // Exit process with failure
-        process.exit(1);
-    }
+const connectDB = async (): Promise<any> => {
+    if (DB_URL?.length == 0) throw new Error('mongo url not loaded pls check ');
+
+    await createClient({
+        socket: {
+            host: REDIS_HOST,
+            port: parseInt(REDIS_PORT!),
+        },
+        password: REDIS_PASSWORD,
+    });
+    return await connect(DB_URL!);
 };
 
 export default connectDB;
