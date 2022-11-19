@@ -23,3 +23,11 @@ connectDB()
         console.log('[Server Failed]:', e);
         process.exit(1);
     });
+
+var exLog = console.log;
+const d: string = new Date().toLocaleTimeString()
+console.log = function (msg) {
+    var timestamp = `[${d}]  `;
+    Array.prototype.unshift.call(arguments, timestamp);
+    exLog.apply(this, [...arguments]);
+};
