@@ -16,8 +16,8 @@ function ErrorHandler(err: any): any {
         } catch (e) {
             message = '';
         }
-        // we are not using the next function to prevent from triggering
-        // the default error-handler.
+        // We are not using the next function to prevent from triggering
+        // The default error-handler.
     } else if (typeof error === 'string' || error instanceof String) {
         message = error as string;
     }

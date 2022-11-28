@@ -1,4 +1,3 @@
-
 // TypeScript Express Logo
 // The Request object is used by Express to provide data about the HTTP request to the controllers of a Node.js server. Therefore, all data from the request available at the application layer depends on this object.
 
@@ -86,7 +85,7 @@
 //     Const isTokenValid = // verifying if authenticationToken is valid with a query or an API call...
 
 //     If (isTokenValid) {
-//       Const user = // retrieving the user info based on authenticationToken  
+//       Const user = // retrieving the user info based on authenticationToken
 
 //       Req["user"] = user // ERROR: Property 'user' does not exist on type 'Request'
 
@@ -112,7 +111,7 @@
 
 // Const SUPPORTED_LANGUAGES = ["en", "es", "it"]
 // // this syntax is equals to "en" | "es" | "it"
-// Export type Language = typeof SUPPORTED_LANGUAGES[number] 
+// Export type Language = typeof SUPPORTED_LANGUAGES[number]
 
 // Export function handleCustomLanguageHeader(req: Request, res: Response, next: NextFunction) {
 //   Const languageHeader = req.headers["content-language"]
@@ -188,7 +187,7 @@
 // Using the extended Request object
 // Now, let’s learn how you can employ the extended Request object. First, let’s complete the middleware functions introduced earlier. This is what authentication.middleware.ts looks like:
 
-// // src/middlewares/authentication.middleware.ts 
+// // src/middlewares/authentication.middleware.ts
 
 // Import { Request, Response, NextFunction } from "express"
 // Import { User } from "../types/custom"

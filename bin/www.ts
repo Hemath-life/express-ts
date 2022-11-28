@@ -17,9 +17,7 @@ try {
         const { name, host, port } = a.connections[0];
         setTimeout(() => {
             spinner.stop();
-
         }, 5000);
-        
 
         console.log('[Database]: mongodb connected');
         console.log('[Database Name]:', name);

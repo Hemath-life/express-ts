@@ -9,9 +9,10 @@
         "dev": "NODE_ENV=dev concurrently \"npx tsc --watch\" \"nodemon -q dist/bin/www\"",
         "w": "NODE_ENV=dev concurrently \"npx tsc --watch\" ",
         "lint": "eslint . --ext .ts",
-        "lint:fix": "eslint . --ext .ts --fix",
-        "local": "NODE_ENV=dev  tsx watch  bin/www.ts",
-        "p:c":"pnpm prettier --check ."
+        "p:f": "pnpx prettier --write .",
+        "p:c": "pnpx prettier --check .",
+        "lint:fix": "pnpm run p:f && eslint . --ext .ts --fix",
+        "local": "NODE_ENV=dev  tsx watch  bin/www.ts"
     },
     "keywords": [],
     "author": "",
