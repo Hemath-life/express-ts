@@ -18,58 +18,58 @@
 // What is the Request object in Express?
 // The Request object represents the HTTP request performed by the client to an Express server. In other words, an Express server can read the data received from the client through Request instances. Therefore, Request has several properties to access all the information contained in the HTTP request, but the most important ones are:
 
-// query: this object contains a property for each query string parameter present in the URL of the request:
-// app.get("/users", (req: Request, res: Response) => {
+// Query: this object contains a property for each query string parameter present in the URL of the request:
+// App.get("/users", (req: Request, res: Response) => {
 //   // on GET "/users?id=4" this would print "4"
-//   console.log(req.query.id)
+//   Console.log(req.query.id)
 // });
-// params: this object contains the parameters defined in the API URL according to the Express routing convention:
-// app.get("/users/:id", (req: Request, res: Response) => {
+// Params: this object contains the parameters defined in the API URL according to the Express routing convention:
+// App.get("/users/:id", (req: Request, res: Response) => {
 //   // on GET "/users/1" this would print "1"
-//   console.log(req.params.id)
+//   Console.log(req.params.id)
 // });
-// body: this object contains key-value pairs of data submitted in the body of the HTTP request:
-// app.get("/users", (req: Request<never, never, { name: string; surname: string }, never>, res: Response) => {
-//   const { name, surname } = req.body
+// Body: this object contains key-value pairs of data submitted in the body of the HTTP request:
+// App.get("/users", (req: Request<never, never, { name: string; surname: string }, never>, res: Response) => {
+//   Const { name, surname } = req.body
 
 //   // ...
 // })
-// headers: this object contains a property for each HTTP header sent by the request.
-// cookies: when using the cookie-parser Express middleware, this object contains a property for each cookie sent by the request
+// Headers: this object contains a property for each HTTP header sent by the request.
+// Cookies: when using the cookie-parser Express middleware, this object contains a property for each cookie sent by the request
 // Why extend Request?
 // Express controllers can access all the data contained in an HTTP request with the Request object. This does not mean that the Request object is the only way to interact with the controllers. On the contrary, Express also supports middlewares. Express middlewares are functions that can be used to add application-level or router-level functionality.
 
 // The middleware functions are associated with the endpoints at the router level as follows:
 
-// const authenticationMiddleware = require("../middlewares/authenticationMiddleware")
-// const FooController = require("../controllers/foo")
+// Const authenticationMiddleware = require("../middlewares/authenticationMiddleware")
+// Const FooController = require("../controllers/foo")
 
-// app.get(
+// App.get(
 //   "/helloWorld",
 //   FooController.helloWorld, // (req, res) => { res.send("Hello, World!") }
 //   // registering the authenticationMiddleware to the "/helloWorld" endpoint
-//   authenticationMiddleware,
+//   AuthenticationMiddleware,
 // )
 // Note that middleware functions are executed before the controller function containing the business logic of the API is called. Learn more about how they work and what the Express middlewares can offer here.
 
 // What is important to notice here is that middlewares can modify the Request object, adding custom information to make it available at the controller level. For example, let’s say you want to make your APIs available only to users with a valid authentication token. To achieve this, you can define a simple authentication middleware as follows:
 
-// import { Request, Response, NextFunction } from "express"
+// Import { Request, Response, NextFunction } from "express"
 
-// export function handleTokenBasedAuthentication(req: Request, res: Response, next: NextFunction) {
-//   const authenticationToken = req.headers["authorization"]
+// Export function handleTokenBasedAuthentication(req: Request, res: Response, next: NextFunction) {
+//   Const authenticationToken = req.headers["authorization"]
 
-//   if (authenticationToken !== undefined) {
-//     const isTokenValid = // verifying if authenticationToken is valid with a query or an API call...
+//   If (authenticationToken !== undefined) {
+//     Const isTokenValid = // verifying if authenticationToken is valid with a query or an API call...
 
-//     if (isTokenValid) {
+//     If (isTokenValid) {
 //       // moving to the next middleware
-//       return next()
+//       Return next()
 //     }
 //   }
 
 //   // if the authorization token is invalid or missing returning a 401 error
-//   res.status(401).send("Unauthorized")
+//   Res.status(401).send("Unauthorized")
 // }
 // When the authentication token received in the Authorization header of the HTTP request is valid, this value is uniquely associated with a user of your service. In other words, the authentication token allows you to identify the user who is making the request, which is very important to know. For example, the business logic at the controller level may change depending on the user’s role.
 
@@ -77,26 +77,26 @@
 
 // Notice that the Express Request type in TypeScript does not involve a user property. This means that you cannot simply extend the Request object as follows:
 
-// import { Request, Response, NextFunction } from "express"
+// Import { Request, Response, NextFunction } from "express"
 
-// export function handleTokenBasedAuthentication(req: Request, res: Response, next: NextFunction) {
-//   const authenticationToken = req.headers["authorization"]
+// Export function handleTokenBasedAuthentication(req: Request, res: Response, next: NextFunction) {
+//   Const authenticationToken = req.headers["authorization"]
 
-//   if (authenticationToken !== undefined) {
-//     const isTokenValid = // verifying if authenticationToken is valid with a query or an API call...
+//   If (authenticationToken !== undefined) {
+//     Const isTokenValid = // verifying if authenticationToken is valid with a query or an API call...
 
-//     if (isTokenValid) {
-//       const user = // retrieving the user info based on authenticationToken  
+//     If (isTokenValid) {
+//       Const user = // retrieving the user info based on authenticationToken  
 
-//       req["user"] = user // ERROR: Property 'user' does not exist on type 'Request'
+//       Req["user"] = user // ERROR: Property 'user' does not exist on type 'Request'
 
 //       // moving to the next middleware
-//       return next()
+//       Return next()
 //     }
 //   }
 
 //   // if the authorization token is invalid or missing returning a 401 error
-//   res.status(401).send("Unauthorized")
+//   Res.status(401).send("Unauthorized")
 // }
 // This would lead to the following error:
 
@@ -105,28 +105,28 @@
 
 // Keep in mind that req.headers["Content-Language"] returns a string | string[] | undefined type. This means that if you want to use Content-Language header value as a string, you have to cast it as follows:
 
-// const language = (req.headers["content-language"] || "en") as string | undefined
+// Const language = (req.headers["content-language"] || "en") as string | undefined
 // Filling your code with this logic is not an elegant solution. Instead, you should use a middleware to extend Request as below:
 
-// import { Request, Response, NextFunction } from "express"
+// Import { Request, Response, NextFunction } from "express"
 
-// const SUPPORTED_LANGUAGES = ["en", "es", "it"]
+// Const SUPPORTED_LANGUAGES = ["en", "es", "it"]
 // // this syntax is equals to "en" | "es" | "it"
-// export type Language = typeof SUPPORTED_LANGUAGES[number] 
+// Export type Language = typeof SUPPORTED_LANGUAGES[number] 
 
-// export function handleCustomLanguageHeader(req: Request, res: Response, next: NextFunction) {
-//   const languageHeader = req.headers["content-language"]
+// Export function handleCustomLanguageHeader(req: Request, res: Response, next: NextFunction) {
+//   Const languageHeader = req.headers["content-language"]
 
 //   // default language: "en"
-//   let language: Language = SUPPORTED_LANGUAGES[0]
+//   Let language: Language = SUPPORTED_LANGUAGES[0]
 
-//   if (typeof languageHeader === "string" && SUPPORTED_LANGUAGES.includes(languageHeader)) {
-//     language = languageHeader
+//   If (typeof languageHeader === "string" && SUPPORTED_LANGUAGES.includes(languageHeader)) {
+//     Language = languageHeader
 //   }
 
 //   // extending the Request object with a language property of type Language...
 
-//   return next()
+//   Return next()
 // }
 // These were just two examples, but there are several other scenarios where extending Request with custom data can save you time and make your codebase more elegant and maintainable.
 
@@ -135,18 +135,18 @@
 
 // Clone the GitHub repository that supports the article and launch the sample backend application locally with the following commands:
 
-// git clone https://github.com/Tonel/extend-express-request-ts-demo
-// cd extend-express-request-ts-demo
-// npm i
-// npm start
+// Git clone https://github.com/Tonel/extend-express-request-ts-demo
+// Cd extend-express-request-ts-demo
+// Npm i
+// Npm start
 // Keep following the article to learn how to take advantage of the extended Express Request type in TypeScript.
 
 // Prerequisites
 // You need these prerequisites to replicate the article’s goal:
 
-// express >= 4.x
+// Express >= 4.x
 // @types/express >= 4.x
-// typescript >= 4.x
+// Typescript >= 4.x
 // If you do not have an Express project in Typescript, you can learn how to set up an Express and TypeScript project from scratch here.
 
 // Adding custom properties to the Request type
@@ -154,16 +154,16 @@
 
 // // src/types/express/index.d.ts
 
-// import { Language, User } from "../custom";
+// Import { Language, User } from "../custom";
 
 // // to make the file a module and avoid the TypeScript error
-// export {}
+// Export {}
 
-// declare global {
-//   namespace Express {
-//     export interface Request {
-//       language?: Language;
-//       user?: User;
+// Declare global {
+//   Namespace Express {
+//     Export interface Request {
+//       Language?: Language;
+//       User?: User;
 //     }
 //   }
 // }
@@ -173,15 +173,15 @@
 
 // // src/types/custom.ts
 
-// export const SUPPORTED_LANGUAGES = ["en", "es", "it"]
+// Export const SUPPORTED_LANGUAGES = ["en", "es", "it"]
 // // this syntax is equals to "en" | "es" | "it"
-// export type Language = typeof SUPPORTED_LANGUAGES[number]
+// Export type Language = typeof SUPPORTED_LANGUAGES[number]
 
-// export type User = {
-//     id: number,
-//     name: string,
-//     surname: string,
-//     authenticationToken : string | null
+// Export type User = {
+//     Id: number,
+//     Name: string,
+//     Surname: string,
+//     AuthenticationToken : string | null
 // }
 // These types will be used in the handleCustomLanguageHeader() and handleTokenBasedAuthentication() middleware functions, respectively. Let’s see how.
 
@@ -190,49 +190,49 @@
 
 // // src/middlewares/authentication.middleware.ts 
 
-// import { Request, Response, NextFunction } from "express"
-// import { User } from "../types/custom"
+// Import { Request, Response, NextFunction } from "express"
+// Import { User } from "../types/custom"
 
 // // in-memory database
-// const users: User[] = [
+// Const users: User[] = [
 //     {
-//         id: 1,
-//         name: "Maria",
-//         surname: "Williams",
-//         authenticationToken: "$2b$08$syAMV/CyYt.ioZ3w5eT/G.omLoUdUWwTWu5WF4/cwnD.YBYVjLw2O",
+//         Id: 1,
+//         Name: "Maria",
+//         Surname: "Williams",
+//         AuthenticationToken: "$2b$08$syAMV/CyYt.ioZ3w5eT/G.omLoUdUWwTWu5WF4/cwnD.YBYVjLw2O",
 //     },
 //     {
-//         id: 2,
-//         name: "James",
-//         surname: "Smith",
-//         authenticationToken: null,
+//         Id: 2,
+//         Name: "James",
+//         Surname: "Smith",
+//         AuthenticationToken: null,
 //     },
 //     {
-//         id: 3,
-//         name: "Patricia",
-//         surname: "Johnson",
-//         authenticationToken: "$2b$89$taWEB/dykt.ipQ7w4aTPGdo/aLsURUWqTWi9SX5/cwnD.YBYOjLe90",
+//         Id: 3,
+//         Name: "Patricia",
+//         Surname: "Johnson",
+//         AuthenticationToken: "$2b$89$taWEB/dykt.ipQ7w4aTPGdo/aLsURUWqTWi9SX5/cwnD.YBYOjLe90",
 //     },
 // ]
 
-// export function handleTokenBasedAuthentication(req: Request, res: Response, next: NextFunction) {
-//     const authenticationToken = req.headers["authorization"]
+// Export function handleTokenBasedAuthentication(req: Request, res: Response, next: NextFunction) {
+//     Const authenticationToken = req.headers["authorization"]
 
-//     if (authenticationToken !== undefined) {
+//     If (authenticationToken !== undefined) {
 //         // using the in-memory sample database to verify if authenticationToken is valid
-//         const isTokenValid = !!users.find((u) => u.authenticationToken === authenticationToken)
+//         Const isTokenValid = !!users.find((u) => u.authenticationToken === authenticationToken)
 
-//         if (isTokenValid) {
+//         If (isTokenValid) {
 //             // retrieving the user associated with the authenticationToken value
-//             const user = users.find((u) => u.authenticationToken === authenticationToken)
+//             Const user = users.find((u) => u.authenticationToken === authenticationToken)
 
-//             req.user = user
+//             Req.user = user
 
 //             // moving to the next middleware
-//             return next()
+//             Return next()
 //         }
 //     }
 
 //     // if the authorization token is invalid or missing returning a 401 error
-//     res.status(401).send("Unauthorized")
+//     Res.status(401).send("Unauthorized")
 // }

@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { Role, RoleInput } from '../../models/role';
 import ErrorHandler from '../../utils/handlers';
 
-const createRole = async (req: Request, res: Response) => {
+const createRole = async (req: Request, res: Response)=>{
     try {
         const { description, name } = req.body;
 
     
-        if (!name || !description) return res.serverError(422, 'The fields name and description are required');
+        if (!name || !description) { return res.serverError(422, 'The fields name and description are required'); }
 
         const role: RoleInput = {
             name,
@@ -21,22 +21,22 @@ const createRole = async (req: Request, res: Response) => {
     }
 };
 
-const getRole = async (req: Request, res: Response) => {
+const getRole = async (req: Request, res: Response)=>{
     const { id } = req.params;
 
     const role = await Role.findOne({ _id: id });
 
-    if (!role) return res.serverError(404, `Role with id "${id}" not found.`);
+    if (!role) { return res.serverError(404, `Role with id "${id}" not found.`); }
 
     return res.success({ data: role });
 };
 
-const getAllRoles = async (req: Request, res: Response) => {
+const getAllRoles = async (req: Request, res: Response)=>{
     const roles = await Role.find().sort('-createdAt').exec();
     return res.success({ data: roles });
 };
 
-const updateRole = async (req: Request, res: Response) => {
+const updateRole = async (req: Request, res: Response)=>{
     const { id } = req.params;
     // Partial any one value should be present
     const body: Partial<RoleInput> = req.body;
@@ -47,7 +47,7 @@ const updateRole = async (req: Request, res: Response) => {
         return res.status(404).json({ message: `Role with id "${id}" not found.` });
     }
 
-    if (Object.keys(body).length == 0) {
+    if (Object.keys(body).length === 0) {
         return res.status(422).json({ message: 'The fields name or description required' });
     }
 
@@ -58,7 +58,7 @@ const updateRole = async (req: Request, res: Response) => {
     return res.status(200).json({ data: roleUpdated });
 };
 
-const deleteRole = async (req: Request, res: Response) => {
+const deleteRole = async (req: Request, res: Response)=>{
     const { id } = req.params;
 
     await Role.findByIdAndDelete(id);

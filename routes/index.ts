@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
 
-// import routes
+// Import routes
 import roleRouter from './role';
 
 router.use('/role', roleRouter);

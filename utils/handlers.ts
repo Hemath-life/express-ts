@@ -14,7 +14,7 @@ function ErrorHandler(err: any): any {
         try {
             message = error.message;
         } catch (e) {
-            message = undefined;
+            message = '';
         }
         // we are not using the next function to prevent from triggering
         // the default error-handler.

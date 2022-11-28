@@ -1,8 +1,11 @@
 import express, { Express } from 'express';
 
-// middleware
+import dotenv from 'dotenv';
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
+// Middleware
 import { response } from './middleware/res';
-// routes
+// Routes
 import router from './routes';
 
 const app: Express = express();

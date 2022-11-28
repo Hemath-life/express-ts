@@ -1,28 +1,39 @@
-import dotenv from 'dotenv';
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 import server from '../server';
 import rootSocket from '../socket/index';
 import connectDB from '../config/database';
 import { Server } from 'socket.io';
 const io = new Server(server);
+import ora from 'ora';
 
-connectDB()
-    .then((a) => {
+const spinner = ora('Loading unicorns').start();
+
+setTimeout(() => {
+    spinner.color = 'yellow';
+    spinner.text = 'server loading';
+}, 1000);
+
+try {
+    connectDB().then((a) => {
         const { name, host, port } = a.connections[0];
+        setTimeout(() => {
+            spinner.stop();
+
+        }, 5000);
+        
+
         console.log('[Database]: mongodb connected');
         console.log('[Database Name]:', name);
         console.log('[Host]:', host);
         console.log('[Port]:', port);
-
         rootSocket(io);
         server.listen(process.env.PORT, () => {
             console.log(`[App]: running in ${process.env.NODE_ENV} mode on port: ${process.env.PORT}`);
         });
-    })
-    .catch((e) => {
-        console.log('[Server Failed]:', e);
-        process.exit(1);
     });
+} catch (e) {
+    console.log('[Server Failed]:', e);
+    process.exit(1);
+}
 
 const colors = {
     reset: '\x1b[0m',
@@ -55,11 +66,10 @@ const colors = {
         crimson: '\x1b[48m',
     },
 };
-
-var exLog = console.log;
+const exLog = console.log;
 const d: string = new Date().toLocaleTimeString();
-console.log = function () {
-    const timestamp = `${colors.dim}[${d}]${colors.reset}  `;
-    Array.prototype.unshift.call(arguments, timestamp);
-    exLog.apply(this, [...arguments]);
+console.log = function (...arg) {
+    const timestamp = `${colors.dim}[${d}]${colors.reset} `;
+    Array.prototype.unshift.call(arg, timestamp);
+    exLog.apply(this, [...arg]);
 };
